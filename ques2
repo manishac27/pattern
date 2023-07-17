@@ -1,0 +1,47 @@
+#!/bin/bash
+
+function run_command {
+    local cmd="$1"
+    local spinner_text="$2"
+
+    echo -n "$spinner_text"
+    {
+        eval "$cmd" &>/dev/null
+    } &
+    local spinner=$!
+
+    local spin='-\|/'
+    local i=0
+    while kill -0 $spinner 2>/dev/null
+    do
+        i=$(( (i+1) %4 ))
+        printf "\r$spinner_text ${spin:$i:1}"
+        sleep .1
+    done
+
+    wait $spinner
+    local exit_code=$?
+
+                          
+    if [[ $exit_code != 0 ]]; then
+        echo "Error: $cmd failed with exit code $exit_code."
+        exit $exit_code
+    fi
+
+    echo "Done."
+}
+
+# Update package lists
+run_command "sudo yum update" "Updating package lists... "
+# Install Docker
+run_command "sudo yum  install docker" "Installing Docker... "
+# Install Minikube
+run_command "curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64 && chmod +x minikube && sudo mv minikube /usr/local/bin" "Installing Minikube... "
+                     
+# Add the current user to the Docker group
+run_command "sudo usermod -aG docker $USER && newgrp docker" "Adding user to Docker group... "
+
+# Add virtual host to /etc/hosts
+run_command "echo '192.168.49.2    hcms.dev' | sudo tee -a /etc/hosts" "Adding virtual host to /etc/hosts... "
+echo "Installation complete."
+                                                                                                                                    45,29         Bot                                                                                                                                                                                                                 
