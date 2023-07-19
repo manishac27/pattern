@@ -1,0 +1,3 @@
+#!/bash/bin/
+echo "Enter the word: "
+read word
