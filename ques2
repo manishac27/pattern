@@ -1,24 +1,61 @@
-                                                                                                                                                                                                                 
-#!/bin/bash
+#!/usr/bin/bash
+ARCH=$(arch)
+sudo docker ps
+exitCode=$?
+if [[ $exitCode != "command not found" ]]
+then
 
-       #Installing DOCKER
+  echo "Docker is present......."
 
-        echo " Installing DOCKER.................. " 
-        sudo dnf -y install docker
-        sudo dnf upgrade --releasever=2023.1.20230705
-        sudo systemctl start docker
-        sudo docker run hello-world
-        docker --version
-        echo " "
+else
+### Installing Docker
 
-        #Installing MINIKUBE
-       
-        echo " Installing MINIKUBE................. "
-        curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
+sudo dnf -y install docker
+sudo dnf upgrade --releasever=2023.1.20230705
+sudo systemctl start docker
+sudo docker run hello-world
+echo "Docker installed successfully........."
+fi
+sudo minikube start
+exitCode=$?
+
+if [[ $exitCode == "minikube: command not found" ]]
+then
+        path=sudo which minikube
+        sudo $path --vm-driver=none
+        exitCode=$?
+        if [[ $exitCode == "minikube: command not found" ]]
+        then
+        echo "Minikube is installing.........."
+
+	### Installing minikube
+
+        if [ $ARCH = "aarch64" ]
+        then
+        curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-arm64
+        sudo install minikube-linux-arm64 /usr/local/bin/minikube
+        sudo snap install kubectl --classic
+        fi
+        if [ $ARCH = "x86_64" ]
+        then
+        echo executing on $ARCHcurl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/sta>
         chmod +x ./kubectl
+        sudo mv ./kubectl /usr/local/bin/kubectl
         curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
         sudo install minikube-linux-amd64 /usr/local/bin/minikube
         sudo minikube version
-        curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-arm64
-        sudo install minikube-linux-arm64 /usr/local/bin/minikube
-        echo "DOCKER and MINIKUBE Installed Successfully..."
+        fi
+        echo "Minikube installed successfully.........."
+        fi
+else
+echo "Minikube is present........"
+fi
+sudo docker --version
+sudo minikube version
+echo manually run minikube start --vm-driver=docker --cni=calico to start minikube
+sudo usermod -aG docker $USER
+newgrp docker
+	
+
+
+	
