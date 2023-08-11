@@ -1,4 +1,3 @@
-[02:01] Chauhan, Manisha
 
 #!/bin/bash
 
