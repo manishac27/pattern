@@ -1,81 +1,78 @@
+#!/usr/bin/bash
 
-#!/bin/bash
+if [ -f "/etc/os-release" ]
+then
+  source "/etc/os-release" 
+  echo "Operating System: $NAME"
+  echo "Version: $VERSION"
+        if [[ "$NAME" == *"Linux"* ]]
+        then
+                echo "The OS is $NAME"
+                ARCH=$(arch)
+                echo "The architecture is $ARCH"
+                if [[ "$ARCH" == "ARM64" || "$ARCH" == "x86_64" || "$ARCH" == "ppc64" || "$ARCH" == "ARMv7" || "$ARCH" == "S390x" ]]
+                then
+                        curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-$ARCH
+                        sudo install minikube-linux-$ARCH /usr/local/bin/minikube
+                fi
+                minikube start
+                minikube status
+                exitCode=$?
+                if [ "$exitCode" != 0 ]
+                then
+                        echo "minikube installation is failing..........."
+        	        exit 1
+                else*
+                        echo "minikube is installed successfully............"
+                fi
+        fi
+        if [[ "$NAME" == *"macOS"* ]]
+        then
+        echo "The OS is $NAME"
+                ARCH=$(arch)
+                echo "The architecture is $ARCH"
+                if [[ "$ARCH" == "x86-64" ]]
+                then
+                        curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-darwin-amd64
+                        sudo install minikube-darwin-amd64 /usr/local/bin/minikube
+             	fi
+		if [[ "$ARCH" == "ARM64"]]
+                then
+                        curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-darwin-arm64
+                        sudo install minikube-darwin-arm64 /usr/local/bin/minikube
+             	fi
+                minikube start
+                minikube statusexitCode=$?
+                if [ "$exitCode" != 0 ]
+                then
+                        echo "minikube installation is failing.............."
+            		exit 1
+                else
+                        echo "minikube is installed Successfully............."
+                fi
+        fi
+        if [[ "$NAME" == *"Windows"* ]]
+        then
+                echo "The OS is $NAME"
+                ARCH=$(arch)
+                echo "The architecture is $ARCH"
+                if [[  "$ARCH" == "x86_64"  ]]
+                then 
+                        curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-Windows-$ARCH
 
-# Function to detect the operating system
-
-detect_os() {
-
-    if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-
-        echo "linux"
-
-    elif [[ "$OSTYPE" == "darwin"* ]]; then
-
-        echo "darwin"
-
-    elif [[ "$OSTYPE" == "msys"* ]]; then
-
-        echo "windows"
-
-    else
-
-        echo "Unsupported OS"
-
-        exit 1
-
-    fi
-
-}
-
-
-# Function to download Minikube based on the detected OS
-
-download_minikube() {
-
-    OS="$1"
-
-    if [[ "$OS" == "linux" ]]; then
-
-        # Download Minikube for Linux
-
-        curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
-
-    elif [[ "$OS" == "darwin" ]]; then
-
-        # Download Minikube for macOS
-
-        curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/minikube-darwin-amd64
-
-    elif [[ "$OS" == "windows" ]]; then
-
-        # Download Minikube for Windows
-
-        curl -Lo minikube.exe https://storage.googleapis.com/minikube/releases/latest/minikube-windows-amd64.exe
-
-    else
-
-        echo "Unsupported OS"
-
-        exit 1
-
-    fi
-
-
-    chmod +x minikube
-
-}
-
-
-# Main script
-
-OS=$(detect_os)
-
-echo "Detected OS: $OS"
-
-
-echo "Downloading Minikube..."
-
-download_minikube "$OS"
-
-
-echo "Minikube downloaded successfully!"
+                        sudo install minikube-Windows-$ARCH /usr/local/bin/minikube 
+                fi
+                minikube start
+                minikube status
+                exitCode=$?
+                if [ "$exitCode" != 0 ]
+                then
+                        echo "minikube installation is failing............."
+                        exit 1
+                else
+                        echo "minikube is installed Successfully............"
+                fi
+	fi
+else
+  echo "Unable to determine the operating system."
+fi
