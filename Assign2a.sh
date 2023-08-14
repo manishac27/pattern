@@ -20,10 +20,10 @@ then
                 exitCode=$?
                 if [ "$exitCode" != 0 ]
                 then
-                        echo "minikube installation is failing..........."
+                        echo "minikube installation failed..........."
         	        exit 1
                 else*
-                        echo "minikube is installed successfully............"
+                        echo "minikube  installed successfully............"
                 fi
         fi
         if [[ "$NAME" == *"macOS"* ]]
@@ -45,10 +45,10 @@ then
                 minikube statusexitCode=$?
                 if [ "$exitCode" != 0 ]
                 then
-                        echo "minikube installation is failing.............."
+                        echo "minikube installation failed............."
             		exit 1
                 else
-                        echo "minikube is installed Successfully............."
+                        echo "minikube  installed Successfully............."
                 fi
         fi
         if [[ "$NAME" == *"Windows"* ]]
@@ -67,10 +67,10 @@ then
                 exitCode=$?
                 if [ "$exitCode" != 0 ]
                 then
-                        echo "minikube installation is failing............."
+                        echo "minikube installation failed............"
                         exit 1
                 else
-                        echo "minikube is installed Successfully............"
+                        echo "minikube installed Successfully............"
                 fi
 	fi
 else
